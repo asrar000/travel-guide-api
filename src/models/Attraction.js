@@ -1,20 +1,58 @@
-const db = require("../config/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../db');
 
-exports.createAttraction = async (a) => {
-  const query = `
-    INSERT INTO attractions
-    (name, slug, additional_info, cancellation_policy, images, price, includes, country, city)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-  `;
-  await db.query(query, [
-    a.name,
-    a.slug,
-    a.additionalInfo,
-    a.cancellationPolicy,
-    JSON.stringify(a.images),
-    a.price,
-    a.includes,
-    a.country,
-    a.city
-  ]);
-};
+const Attraction = sequelize.define('Attraction', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    attractionName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    attractionSlug: {
+        type: DataTypes.STRING,
+        unique: true
+    },
+    additionalInfo: {
+        type: DataTypes.TEXT
+    },
+    cancellationPolicy: {
+        type: DataTypes.TEXT
+    },
+    images: {
+        type: DataTypes.JSONB,
+        defaultValue: []
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    currency: {
+        type: DataTypes.STRING,
+        defaultValue: 'USD'
+    },
+    whatsIncluded: {
+        type: DataTypes.TEXT
+    },
+    country: {
+        type: DataTypes.STRING
+    },
+    city: {
+        type: DataTypes.STRING
+    },
+    rating: {
+        type: DataTypes.DECIMAL(3, 1)
+    },
+    reviewsCount: {
+        type: DataTypes.INTEGER
+    },
+    address: {
+        type: DataTypes.TEXT
+    }
+}, {
+    tableName: 'attractions',
+    timestamps: true
+});
+
+module.exports = Attraction;

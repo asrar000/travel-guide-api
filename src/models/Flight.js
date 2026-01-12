@@ -1,19 +1,62 @@
-const db = require("../config/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../db');
 
-exports.createFlight = async (flight) => {
-  const query = `
-    INSERT INTO flights 
-    (flight_name, departure_airport, arrival_airport, departure_time, arrival_time, flight_logo, fare, country)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-  `;
-  await db.query(query, [
-    flight.name,
-    flight.departure,
-    flight.arrival,
-    flight.departureTime,
-    flight.arrivalTime,
-    flight.logo,
-    flight.fare,
-    flight.country
-  ]);
-};
+const Flight = sequelize.define('Flight', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    flightName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    departureAirport: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    arrivalAirport: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    departureTime: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    arrivalTime: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    flightLogo: {
+        type: DataTypes.STRING
+    },
+    fare: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    currency: {
+        type: DataTypes.STRING,
+        defaultValue: 'USD'
+    },
+    location: {
+        type: DataTypes.STRING
+    },
+    country: {
+        type: DataTypes.STRING
+    },
+    flightToken: {
+        type: DataTypes.STRING,
+        unique: true
+    },
+    duration: {
+        type: DataTypes.STRING
+    },
+    stops: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    }
+}, {
+    tableName: 'flights',
+    timestamps: true
+});
+
+module.exports = Flight;
